@@ -32,5 +32,5 @@ socket.on('newMessage', function(message){
 
 
 socket.on('newEmail', function (message) {
-    console.log('New Email', message);
+    console.log('New Email', JSON.stringify(message));
 });

@@ -25,33 +25,54 @@ io.on('connection', (socket) => {
     //     console.log('create email', newEmail);
     // });
 
+    socket.emit('newMessage', generateMessage('Admin', 'welcome to the chat app'));
 
-    socket.on('createMessage', (message) => {
-        console.log(`recieved created message ${message}`);
-        io.emit('newMessage', {
-            from: message.from,
-            text: message.text,
-            created: new Date().getTime()
-        });
+    socket.broadcast.emit('newMessage', {
+        from: 'Admin',
+        text: `New user joined`,
+        created: new Date().getTime()
     });
-
-    // socket.emit('createMessage', {
-    //     to: 'person',
-    //     text: 'message'
-    // });
 
     socket.on('messagerecieved', (message) => {
         console.log('messagerecieved ', message);
     });
 
-    // socket.on('createemail', (email) =>{
-    //    console.log('create email' ,email);
-    // });
+    socket.on('createMessage', (message) => {
+
+        socket.emit('newMessage', {
+            message: 'welcome from admin'
+        });
+
+        socket.broadcast.emit('newMessage', {
+            message: `hello I am ${message.from}`
+        });
+
+        console.log(`recieved created message ${message}`);
+        // io.emit('newMessage', {
+        //     from: message.from,
+        //     text: message.text,
+        //     created: new Date().getTime()
+        // });
+
+    });
 
     socket.on('disconnect', () => {
         console.log('User was disconnected from server');
     });
 });
+
+
+// socket.emit('createMessage', {
+//     to: 'person',
+//     text: 'message'
+// });
+
+
+
+// socket.on('createemail', (email) =>{
+//    console.log('create email' ,email);
+// });
+
 
 
 let PORT_NUMBER = process.env.PORT || 3000;
