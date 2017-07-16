@@ -6,6 +6,7 @@ const path = require('path');
 const express = require('express');
 const http = require('http');
 const socketIO = require('socket.io');
+const {generateMessage} = require('./utils/message');
 
 const publicPath = path.join(__dirname, '../public');
 
@@ -37,22 +38,25 @@ io.on('connection', (socket) => {
         console.log('messagerecieved ', message);
     });
 
-    socket.on('createMessage', (message) => {
+    socket.on('createMessage', (message, callback) => {
 
-        socket.emit('newMessage', {
-            message: 'welcome from admin'
-        });
+        // socket.emit('newMessage', {
+        //     message: 'welcome from admin'
+        // });
 
         socket.broadcast.emit('newMessage', {
-            message: `hello I am ${message.from}`
+            from: message.from,
+            text: message.text
         });
 
-        console.log(`recieved created message ${message}`);
+        console.log('received created message' ,message);
         // io.emit('newMessage', {
         //     from: message.from,
         //     text: message.text,
         //     created: new Date().getTime()
         // });
+
+        //callback({ text: 'callback text'});
 
     });
 
@@ -61,11 +65,6 @@ io.on('connection', (socket) => {
     });
 });
 
-
-// socket.emit('createMessage', {
-//     to: 'person',
-//     text: 'message'
-// });
 
 
 
