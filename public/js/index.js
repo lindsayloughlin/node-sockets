@@ -6,6 +6,27 @@
 var socket = io();
 const FORMAT = 'h:mm a';
 
+function scrollToBottom(){
+    // selectors
+    var messages = jQuery('#messages');
+
+    // heights
+    var newMessage = messages.children('li:last-child');
+    var clientHeight = messages.prop('clientHeight');
+    var scrollTop = messages.prop('scrollTop');
+    var scrollHeight = messages.prop('scrollHeight');
+    var newMessageHeight = newMessage.innerHeight();
+    var lastMessageHeight = newMessage.prev().innerHeight();
+
+    const scroll = clientHeight + scrollTop + newMessageHeight + lastMessageHeight;
+    console.log(scroll + ' ' +scrollHeight);
+
+    if ( (clientHeight + scrollTop + newMessageHeight + lastMessageHeight) <= scrollHeight) {
+        console.log('Should scroll');
+        messages.scrollTop(scrollHeight);
+    }
+}
+
 // Sad panda
 socket.on('connect', function () {
     console.log('Connected to server');
@@ -36,6 +57,7 @@ socket.on('newMessage', function(message){
        from: message.from
    });
    jQuery('#messages').append(html);
+    scrollToBottom();
 
    // var li = jQuery('<li></li>');
    //
@@ -61,6 +83,7 @@ socket.on('newLocationMessage',function(message){
    });
 
    jQuery('#messages').append(html);
+    scrollToBottom();
 });
 
 jQuery('#message-form').on('submit', function(event){

@@ -48,7 +48,7 @@ io.on('connection', (socket) => {
         //     message: 'welcome from admin'
         // });
 
-        socket.broadcast.emit('newMessage', {
+        socket.emit('newMessage', {
             from: message.from,
             text: message.text
         });
@@ -60,6 +60,7 @@ io.on('connection', (socket) => {
         //     created: new Date().getTime()
         // });
 
+        callback();
         //callback({ text: 'callback text'});
 
     });
