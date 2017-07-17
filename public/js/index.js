@@ -52,10 +52,14 @@ socket.on('newLocationMessage',function(message){
 jQuery('#message-form').on('submit', function(event){
     event.preventDefault();
 
+    var element = jQuery('[name=message]')
     socket.emit('createMessage', {
         from: 'User123',
-        text: jQuery('#message').val()
-    });
+        text: element.val()
+    },function() {
+        // clear the input
+        element.va('');
+    })
 });
 
 var locationButton = jQuery('#send-location');
