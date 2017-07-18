@@ -31,6 +31,16 @@ function scrollToBottom(){
 socket.on('connect', function () {
     console.log('Connected to server');
 
+    var params = jQuery.deparam(window.location.search);
+
+    socket.emit('join', params, function(errors){
+       if (errors){
+           alert(errors);
+           window.location.href = '/';
+       } else {
+         console.log('welcome to room');
+       }
+    });
     // socket.emit('createemail', {
     //     to: 'some1@test.com',
     //     text: 'hey you'
@@ -44,8 +54,18 @@ socket.on('connect', function () {
 
 });
 
+socket.on('updateUserList', function(users) {
+    var ol = jQuery('<ol></ol>');
+    users.forEach(function(user) {
+        ol.append(jQuery('<li></li>').text(user));
+    });
+    jQuery('#users').html(ol);
+});
+
 socket.on('disconnect', function () {
     console.log('disconnected from server');
+
+    //socket.io('')
 });
 
 socket.on('newMessage', function(message){
@@ -81,17 +101,17 @@ socket.on('newLocationMessage',function(message){
        from: message.from,
        createdAt: formattedTime
    });
-
+    console.log('new location message ', html);
    jQuery('#messages').append(html);
     scrollToBottom();
 });
 
 jQuery('#message-form').on('submit', function(event){
+    //console.log('submitting message');
     event.preventDefault();
-
     const element = jQuery('[name=message]');
+    //console.log('value: ', element.val());
     socket.emit('createMessage', {
-        from: 'User123',
         text: element.val()
     },function() {
         // clear the input
